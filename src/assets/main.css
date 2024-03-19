@@ -1,0 +1,6 @@
+@import './base.css';
+
+#app {
+  background: linear-gradient(#dd5e89, #f7bb97);
+  min-height: 100vh;
+}
