@@ -52,6 +52,7 @@ const calculateRating = (rate: number) => {
   display: flex;
   align-items: center;
   border-bottom: 1.5px solid #eee;
+  cursor: pointer;
 }
 
 .reader-avatar {

@@ -1,23 +1,32 @@
 <template>
-  <div class="chat-container">
-    <TheMessage
-      v-for="(message, index) in messages"
-      :key="index"
-      :isOwn="message.from === authStore.user?.uid"
-      :message="message"
-    />
+  <div
+    class="chat-container"
+    :class="{
+      'is-ended': isEnded
+    }"
+  >
+    <p class="end-notify" v-if="isEnded">トークを終了しました</p>
+    <template v-else>
+      <TheMessage
+        v-for="(message, index) in messages"
+        :key="index"
+        :isOwn="message.from === authStore.user?.uid"
+        :message="message"
+      />
+    </template>
 
     <div id="end" class="end"></div>
-    <SendMessage @sent="scrollToBottom" :send="sendMessage" />
+    <SendMessage v-if="!isEnded" :isEnd="isEnded" @sent="scrollToBottom" :send="sendMessage" />
   </div>
 </template>
 
 <script setup lang="ts">
 import SendMessage from '@/components/SendMessage.vue'
 import TheMessage from '@/components/TheMessage.vue'
+import { useBox } from '@/composables/useBox'
 import { useChat } from '@/composables/useChat'
 import { useAuthStore } from '@/stores/auth'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 const authStore = useAuthStore()
@@ -25,6 +34,9 @@ const route = useRoute()
 const readerId = route.query.id as string
 
 const { messages, sendMessage, unsubscribe } = await useChat(readerId)
+const { chatbox, unsubscribe: _unsubscribe } = await useBox(readerId)
+
+const isEnded = computed(() => chatbox.value && chatbox.value[0] && chatbox.value[0].isEnding)
 
 const scrollToBottom = () => {
   const ele = document.getElementById('end')
@@ -37,7 +49,10 @@ onMounted(() => {
   }, 200)
 })
 
-onUnmounted(unsubscribe)
+onUnmounted(() => {
+  unsubscribe()
+  _unsubscribe()
+})
 </script>
 
 <style scoped>
@@ -53,5 +68,16 @@ onUnmounted(unsubscribe)
 
 .end {
   padding: 18px;
+}
+
+.end-notify {
+  margin: auto;
+  font-weight: 700;
+  color: #fff;
+  font-size: 24px;
+}
+
+.is-ended {
+  overflow: unset;
 }
 </style>

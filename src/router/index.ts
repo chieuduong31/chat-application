@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores/auth'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -19,6 +20,27 @@ const router = createRouter({
       component: () => import('@/views/ChatRoom.vue')
     }
   ]
+})
+
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
+
+  const user = await authStore.getCurrentUser()
+
+  if (user && to.name === 'Login')
+    next({
+      name: 'Home'
+    })
+
+  if (!user && to.name === 'Login') next()
+
+  if (!user) {
+    next({
+      name: 'Login'
+    })
+  }
+
+  next()
 })
 
 export default router

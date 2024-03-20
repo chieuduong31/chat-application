@@ -7,8 +7,26 @@
     <div class="buy-coin">
       <div class="buy-coin-btn">コイン購入</div>
     </div>
+    <div class="buy-coin" @click="logout">
+      <div class="buy-coin-btn">ログアウト</div>
+    </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+const logout = async () => {
+  await authStore.signOut()
+  router.push({
+    name: 'Login'
+  })
+}
+</script>
 
 <style scoped>
 .header-container {
@@ -47,5 +65,6 @@
   border-radius: 8px;
   padding: 4px 6px;
   text-align: center;
+  cursor: pointer;
 }
 </style>

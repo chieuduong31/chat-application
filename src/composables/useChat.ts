@@ -1,7 +1,7 @@
 import firebase from 'firebase/compat/app'
 import { firestore } from '@/libs/firebase'
 import { useAuthStore } from '@/stores/auth'
-import { ref, onUnmounted } from 'vue'
+import { ref } from 'vue'
 
 export async function useChat(readerId: string) {
   const authStore = useAuthStore()
