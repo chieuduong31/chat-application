@@ -7,6 +7,7 @@
   >
     <div class="end-notify" v-if="isEnded">
       <p>トークを終了しました</p>
+      <div class="back-btn" @click="backToList">Back</div>
     </div>
     <template v-else>
       <TheMessage
@@ -16,9 +17,17 @@
         :message="message"
       />
     </template>
-    <span v-if="chatbox[0].readerIsTyping">Is typing...</span>
+    <span v-if="chatbox && chatbox[0].readerIsTyping">Is typing...</span>
     <div id="end" class="end"></div>
-    <SendMessage v-if="!isEnded" :isEnd="isEnded" @sent="scrollToBottom" :send="sendMessage" :sendUnread="sendUnread" :chatboxId="chatbox?.[0]?.id" :readerId="readerId"/>
+    <SendMessage
+      v-if="!isEnded"
+      :isEnd="isEnded"
+      @sent="scrollToBottom"
+      :send="sendMessage"
+      :sendUnread="sendUnread"
+      :chatboxId="chatbox?.[0]?.id"
+      :readerId="readerId"
+    />
   </div>
 </template>
 
@@ -27,25 +36,33 @@ import SendMessage from '@/components/SendMessage.vue'
 import TheMessage from '@/components/TheMessage.vue'
 import { useBox } from '@/composables/useBox'
 import { useChat } from '@/composables/useChat'
+// @ts-ignore
 import { useUnread } from '@/composables/useUnread'
 import { useAuthStore } from '@/stores/auth'
 import { computed, onMounted, onUnmounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
 const route = useRoute()
+const router = useRouter()
 const readerId = route.query.chat_id as string
 
 const { messages, sendMessage, unsubscribe } = await useChat(readerId)
-const { chatbox, unsubscribe: _unsubscribe } = await useBox(readerId)
+const { chatbox, unsubscribe: _unsubscribe, continueChatting } = await useBox(readerId)
 const { sendUnread } = await useUnread()
 
 const isEnded = computed(() => chatbox.value && chatbox.value[0] && chatbox.value[0].isEnding)
 
-
 const scrollToBottom = () => {
   const ele = document.getElementById('end')
   ele?.scrollIntoView()
+}
+
+const backToList = () => {
+  continueChatting()
+  router.push({
+    name: 'Home'
+  })
 }
 
 onMounted(() => {
@@ -84,5 +101,20 @@ onUnmounted(() => {
 
 .is-ended {
   overflow: unset;
+}
+
+.back-btn {
+  position: fixed;
+  bottom: 1%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  padding: 10px 30px;
+  background: #fff;
+  color: #fa94af;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 30px;
+  cursor: pointer;
 }
 </style>

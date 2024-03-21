@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core'
-import { ref, watch  } from 'vue'
+import { ref, watch } from 'vue'
 import { useBox } from '@/composables/useBox'
 
 interface Props {
@@ -39,7 +39,7 @@ const textarea = ref('')
 
 const inputRef = ref<HTMLElement | null>(null)
 
-watch(textarea, (newValue, oldValue) => {
+watch(textarea, (newValue) => {
   if (newValue != '') {
     isTyping(true)
   } else {

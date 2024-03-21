@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/auth'
 // @ts-ignore
 import { v4 as uuidv4 } from 'uuid'
 import { ref } from 'vue'
+import { doc, updateDoc } from 'firebase/firestore'
 
 export async function useBox(readerId: string) {
   const authStore = useAuthStore()
@@ -28,20 +29,30 @@ export async function useBox(readerId: string) {
         lastEnd: null
       })
     }
-    chatbox.value = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })).reverse()
+    chatbox.value = snapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data(), docId: doc.id }))
+      .reverse()
   })
 
-  const isTyping = async (status) => {
+  const isTyping = async (status: boolean) => {
     if (!authStore.isLogin) return
-    console.log(status)
-    const query = chatboxesCollection.where('id', '==', chatbox.value[0].id);
-    const querySnapshot = await query.get();
+    const query = chatboxesCollection.where('id', '==', chatbox.value[0].id)
+    const querySnapshot = await query.get()
     querySnapshot.forEach((doc) => {
       doc.ref.update({
         userIsTyping: status
-      });
-    });
+      })
+    })
   }
 
-  return { chatbox, unsubscribe, isTyping }
+  const continueChatting = () => {
+    // @ts-ignore
+    const docRef = doc(chatboxesCollection, chatbox.value[0].docId)
+    updateDoc(docRef, {
+      isEnding: false,
+      lastEnd: null
+    })
+  }
+
+  return { chatbox, unsubscribe, isTyping, continueChatting }
 }
