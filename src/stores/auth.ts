@@ -9,7 +9,6 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref<any>(null)
 
   const unsubscribe = auth.onAuthStateChanged((_user) => {
-    console.log('tai sao lai k chay')
     user.value = _user
   })
   onUnmounted(unsubscribe)

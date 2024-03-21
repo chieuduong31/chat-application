@@ -25,7 +25,17 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
-  const user = await authStore.getCurrentUser()
+  const user = (await authStore.getCurrentUser()) as any
+
+  if (user && (to.name === 'Home' || to.name === 'Chat') && !to.query.line_user_id) {
+    next({
+      ...to,
+      query: {
+        ...to.query,
+        line_user_id: user.uid
+      }
+    })
+  }
 
   if (user && to.name === 'Login')
     next({

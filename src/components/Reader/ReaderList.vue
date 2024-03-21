@@ -5,7 +5,7 @@
         router.push({
           name: 'Chat',
           query: {
-            line_user_id: reader.id
+            chat_id: reader.id
           }
         })
       "

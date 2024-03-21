@@ -11,8 +11,6 @@ export async function useBox(readerId: string) {
 
   const chatbox = ref<any[]>()
 
-  console.log(user)
-
   const chatboxesCollection = firestore.collection(`chatboxes`)
   const chatboxesQuery = chatboxesCollection
     .where('reader', '==', readerId)
