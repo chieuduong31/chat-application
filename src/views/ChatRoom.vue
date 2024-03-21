@@ -14,9 +14,9 @@
         :message="message"
       />
     </template>
-
+    <span v-if="chatbox[0].readerIsTyping">Is typing...</span>
     <div id="end" class="end"></div>
-    <SendMessage v-if="!isEnded" :isEnd="isEnded" @sent="scrollToBottom" :send="sendMessage" :sendUnread="sendUnread" :chatboxId="chatbox?.[0]?.id"/>
+    <SendMessage v-if="!isEnded" :isEnd="isEnded" @sent="scrollToBottom" :send="sendMessage" :sendUnread="sendUnread" :chatboxId="chatbox?.[0]?.id" :readerId="readerId"/>
   </div>
 </template>
 
