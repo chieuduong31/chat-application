@@ -8,14 +8,18 @@ export const useAuthStore = defineStore('auth', () => {
   const router = useRouter()
   const user = ref<any>(null)
 
-  const unsubscribe = auth.onAuthStateChanged((_user) => (user.value = _user))
+  const unsubscribe = auth.onAuthStateChanged((_user) => {
+    console.log('tai sao lai k chay')
+    user.value = _user
+  })
   onUnmounted(unsubscribe)
 
   const isLogin = computed(() => user.value !== null)
 
   const signIn = async () => {
     const googleProvider = new firebase.auth.GoogleAuthProvider()
-    await auth.signInWithPopup(googleProvider)
+    const { user: _user } = await auth.signInWithPopup(googleProvider)
+    user.value = _user
     router.push({
       name: 'Home'
     })
