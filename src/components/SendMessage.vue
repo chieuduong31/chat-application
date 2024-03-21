@@ -21,6 +21,8 @@ import { ref } from 'vue'
 
 interface Props {
   send: (msg: string) => void
+  sendUnread: (chatboxId: string) => void
+  chatboxId: string
 }
 
 const props = defineProps<Props>()
@@ -45,6 +47,7 @@ useEventListener(inputRef, 'keydown', (e) => {
 const _send = () => {
   if (textarea.value.trim() !== '') {
     props.send(textarea.value)
+    props.sendUnread(props.chatboxId)
     textarea.value = ''
     emit('sent')
   }
