@@ -7,7 +7,7 @@
   >
     <div class="end-notify" v-if="isEnded">
       <p>トークを終了しました</p>
-      <div class="back-btn" @click="backToList">Back</div>
+      <div class="back-btn" @click="backToList">戻る</div>
     </div>
     <template v-else>
       <TheMessage
