@@ -17,7 +17,9 @@
         :message="message"
       />
     </template>
-    <span v-if="chatbox && chatbox[0].readerIsTyping">占い師が入力しています。。。</span>
+    <span class="text-sm" v-if="chatbox && chatbox[0].readerIsTyping"
+      >占い師が入力しています。。。</span
+    >
     <div id="end" class="end"></div>
     <SendMessage
       v-if="!isEnded"
@@ -123,5 +125,9 @@ onUnmounted(() => {
   font-weight: 700;
   font-size: 30px;
   cursor: pointer;
+}
+
+.text-sm {
+  font-size: 12px;
 }
 </style>
