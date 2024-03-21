@@ -17,7 +17,7 @@
         :message="message"
       />
     </template>
-    <span v-if="chatbox && chatbox[0].readerIsTyping">Is typing...</span>
+    <span v-if="chatbox && chatbox[0].readerIsTyping">占い師が入力しています。。。</span>
     <div id="end" class="end"></div>
     <SendMessage
       v-if="!isEnded"
@@ -39,7 +39,7 @@ import { useChat } from '@/composables/useChat'
 // @ts-ignore
 import { useUnread } from '@/composables/useUnread'
 import { useAuthStore } from '@/stores/auth'
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
@@ -57,6 +57,13 @@ const scrollToBottom = () => {
   const ele = document.getElementById('end')
   ele?.scrollIntoView()
 }
+
+watch(
+  () => messages.value,
+  () => {
+    scrollToBottom()
+  }
+)
 
 const backToList = () => {
   continueChatting()
