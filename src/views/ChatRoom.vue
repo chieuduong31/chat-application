@@ -31,7 +31,7 @@ import { useRoute } from 'vue-router'
 
 const authStore = useAuthStore()
 const route = useRoute()
-const readerId = route.query.id as string
+const readerId = route.query.line_user_id as string
 
 const { messages, sendMessage, unsubscribe } = await useChat(readerId)
 const { chatbox, unsubscribe: _unsubscribe } = await useBox(readerId)
