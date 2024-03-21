@@ -31,5 +31,17 @@ export async function useBox(readerId: string) {
     chatbox.value = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })).reverse()
   })
 
-  return { chatbox, unsubscribe }
+  const isTyping = async (status) => {
+    if (!authStore.isLogin) return
+    console.log(status)
+    const query = chatboxesCollection.where('id', '==', chatbox.value[0].id);
+    const querySnapshot = await query.get();
+    querySnapshot.forEach((doc) => {
+      doc.ref.update({
+        userIsTyping: status
+      });
+    });
+  }
+
+  return { chatbox, unsubscribe, isTyping }
 }

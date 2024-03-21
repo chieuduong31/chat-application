@@ -17,13 +17,20 @@
 
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core'
-import { ref } from 'vue'
+import { ref, watch  } from 'vue'
+import { useBox } from '@/composables/useBox'
 
 interface Props {
   send: (msg: string) => void
+  sendUnread: (chatboxId: string) => void
+  chatboxId: string
+  readerId: string
 }
 
 const props = defineProps<Props>()
+
+const { isTyping } = await useBox(props.readerId)
+
 const emit = defineEmits<{
   (e: 'sent'): void
 }>()
@@ -31,6 +38,14 @@ const emit = defineEmits<{
 const textarea = ref('')
 
 const inputRef = ref<HTMLElement | null>(null)
+
+watch(textarea, (newValue, oldValue) => {
+  if (newValue != '') {
+    isTyping(true)
+  } else {
+    isTyping(false)
+  }
+})
 
 useEventListener(inputRef, 'keydown', (e) => {
   if (e.key === 'Enter' && e.shiftKey) {
@@ -45,6 +60,7 @@ useEventListener(inputRef, 'keydown', (e) => {
 const _send = () => {
   if (textarea.value.trim() !== '') {
     props.send(textarea.value)
+    props.sendUnread(props.chatboxId)
     textarea.value = ''
     emit('sent')
   }

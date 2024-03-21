@@ -16,9 +16,9 @@
         :message="message"
       />
     </template>
-
+    <span v-if="chatbox[0].readerIsTyping">Is typing...</span>
     <div id="end" class="end"></div>
-    <SendMessage v-if="!isEnded" :isEnd="isEnded" @sent="scrollToBottom" :send="sendMessage" />
+    <SendMessage v-if="!isEnded" :isEnd="isEnded" @sent="scrollToBottom" :send="sendMessage" :sendUnread="sendUnread" :chatboxId="chatbox?.[0]?.id" :readerId="readerId"/>
   </div>
 </template>
 
@@ -27,6 +27,7 @@ import SendMessage from '@/components/SendMessage.vue'
 import TheMessage from '@/components/TheMessage.vue'
 import { useBox } from '@/composables/useBox'
 import { useChat } from '@/composables/useChat'
+import { useUnread } from '@/composables/useUnread'
 import { useAuthStore } from '@/stores/auth'
 import { computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
@@ -37,8 +38,10 @@ const readerId = route.query.chat_id as string
 
 const { messages, sendMessage, unsubscribe } = await useChat(readerId)
 const { chatbox, unsubscribe: _unsubscribe } = await useBox(readerId)
+const { sendUnread } = await useUnread()
 
 const isEnded = computed(() => chatbox.value && chatbox.value[0] && chatbox.value[0].isEnding)
+
 
 const scrollToBottom = () => {
   const ele = document.getElementById('end')
