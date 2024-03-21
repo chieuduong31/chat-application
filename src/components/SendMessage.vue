@@ -6,7 +6,7 @@
         v-model="textarea"
         :rows="2"
         type="textarea"
-        placeholder="From kiai with love"
+        placeholder="メッセージを入力してください。"
       />
     </div>
     <div class="send-btn-container">
