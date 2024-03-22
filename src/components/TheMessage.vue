@@ -42,7 +42,6 @@ defineProps<Props>()
   position: relative;
   font-size: 14px;
   min-width: 60px;
-  background: #fff;
   border-radius: 16px;
   padding: 10px;
   color: #000;
