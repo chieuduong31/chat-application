@@ -1,35 +1,19 @@
 <template>
-  <div
-    class="chat-container"
-    :class="{
-      'is-ended': isEnded
-    }"
-  >
+  <div class="chat-container" :class="{
+    'is-ended': isEnded
+  }">
     <div class="end-notify" v-if="isEnded">
       <p>トークを終了しました</p>
       <div class="back-btn" @click="backToList">戻る</div>
     </div>
     <template v-else>
-      <TheMessage
-        v-for="(message, index) in messages"
-        :key="index"
-        :isOwn="message.from === authStore.user?.uid"
-        :message="message"
-      />
+      <TheMessage v-for="(message, index) in messages" :key="index" :isOwn="message.from === authStore.user?.uid"
+        :message="message" />
     </template>
-    <span class="text-sm" v-if="chatbox && chatbox[0].readerIsTyping"
-      >占い師が入力しています。。。</span
-    >
+    <span class="text-sm" v-if="chatbox && chatbox[0]?.readerIsTyping">占い師が入力しています。。。</span>
     <div id="end" class="end"></div>
-    <SendMessage
-      v-if="!isEnded"
-      :isEnd="isEnded"
-      @sent="scrollToBottom"
-      :send="sendMessage"
-      :sendUnread="sendUnread"
-      :chatboxId="chatbox?.[0]?.id"
-      :readerId="readerId"
-    />
+    <SendMessage v-if="!isEnded" :isEnd="isEnded" @sent="scrollToBottom" :send="sendMessage" :sendUnread="sendUnread"
+      :isTyping="isTyping" :chatboxId="chatbox?.[0]?.id" :readerId="readerId" />
   </div>
 </template>
 
@@ -50,7 +34,7 @@ const router = useRouter()
 const readerId = route.query.chat_id as string
 
 const { messages, sendMessage, unsubscribe } = await useChat(readerId)
-const { chatbox, unsubscribe: _unsubscribe, continueChatting } = await useBox(readerId)
+const { chatbox, unsubscribe: _unsubscribe, isTyping, continueChatting } = await useBox(readerId)
 const { sendUnread } = await useUnread()
 
 const isEnded = computed(() => chatbox.value && chatbox.value[0] && chatbox.value[0].isEnding)
