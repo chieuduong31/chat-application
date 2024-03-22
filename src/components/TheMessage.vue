@@ -26,6 +26,7 @@ defineProps<Props>()
   width: fit-content;
   font-size: 14px;
   max-width: 70%;
+  white-space: pre-wrap;
 }
 
 .own {
