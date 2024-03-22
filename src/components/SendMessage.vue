@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { useEventListener } from '@vueuse/core'
+// import { useEventListener } from '@vueuse/core'
 import { ref, watch } from 'vue'
 import { useBox } from '@/composables/useBox'
 
@@ -47,15 +47,15 @@ watch(textarea, (newValue) => {
   }
 })
 
-useEventListener(inputRef, 'keydown', (e) => {
-  if (e.key === 'Enter' && e.shiftKey) {
-    // generate new line
-  } else if (e.key === 'Enter') {
-    // trigger send message
-    _send()
-    e.preventDefault()
-  }
-})
+// useEventListener(inputRef, 'keydown', (e) => {
+//   if (e.key === 'Enter' && e.shiftKey) {
+//     // generate new line
+//   } else if (e.key === 'Enter') {
+//     // trigger send message
+//     _send()
+//     e.preventDefault()
+//   }
+// })
 
 const _send = () => {
   if (textarea.value.trim() !== '') {
