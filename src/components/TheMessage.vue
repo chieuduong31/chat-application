@@ -65,9 +65,9 @@ defineProps<Props>()
   width: 0px;
   height: 0px;
   position: absolute;
-  border-right: 12px solid #fff;
+  border-right: 12px solid #5356ff;
   border-left: 8px solid transparent;
-  border-top: 8px solid #fff;
+  border-top: 8px solid #5356ff;
   border-bottom: 12px solid transparent;
   right: 24px;
   bottom: -16px;
