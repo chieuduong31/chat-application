@@ -17,7 +17,6 @@ export async function useBox(readerId: string) {
     .where('reader', '==', readerId)
     .where('user', '==', user.uid)
     .limit(1)
-
   const unsubscribe = chatboxesQuery.onSnapshot(async (snapshot) => {
     if (snapshot.empty) {
       await chatboxesCollection.add({
@@ -36,8 +35,8 @@ export async function useBox(readerId: string) {
 
   const isTyping = async (status: boolean) => {
     if (!authStore.isLogin) return
-    const query = chatboxesCollection.where('id', '==', chatbox.value[0].id)
-    const querySnapshot = await query.get()
+    const query = chatboxesCollection.where('id', '==', chatbox.value[0]?.id)
+    const querySnapshot = await query.get();
     querySnapshot.forEach((doc) => {
       doc.ref.update({
         userIsTyping: status

@@ -16,20 +16,20 @@
 </template>
 
 <script setup lang="ts">
-// import { useEventListener } from '@vueuse/core'
-import { ref, watch } from 'vue'
-import { useBox } from '@/composables/useBox'
+import { useEventListener } from '@vueuse/core'
+import { ref, watch  } from 'vue'
 
 interface Props {
   send: (msg: string) => void
   sendUnread: (chatboxId: string) => void
   chatboxId: string
   readerId: string
+  isTyping: (isTyping: boolean) => void
 }
 
 const props = defineProps<Props>()
 
-const { isTyping } = await useBox(props.readerId)
+// const { isTyping } = await useBox(props.readerId)
 
 const emit = defineEmits<{
   (e: 'sent'): void
@@ -41,9 +41,9 @@ const inputRef = ref<HTMLElement | null>(null)
 
 watch(textarea, (newValue) => {
   if (newValue != '') {
-    isTyping(true)
+    props.isTyping(true)
   } else {
-    isTyping(false)
+    props.isTyping(false)
   }
 })
 
