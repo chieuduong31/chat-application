@@ -25,7 +25,7 @@ import { useChat } from '@/composables/useChat'
 // @ts-ignore
 import { useUnread } from '@/composables/useUnread'
 import { useAuthStore } from '@/stores/auth'
-import { computed, onMounted, onUnmounted, watch } from 'vue'
+import { computed, onMounted, onUnmounted, watch, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
@@ -34,7 +34,7 @@ const router = useRouter()
 const readerId = route.query.chat_id as string
 
 const { messages, sendMessage, unsubscribe } = await useChat(readerId)
-const { chatbox, unsubscribe: _unsubscribe, isTyping, continueChatting } = await useBox(readerId)
+const { chatbox, unsubscribe: _unsubscribe, isTyping, continueChatting, endSession } = await useBox(readerId)
 const { sendUnread } = await useUnread()
 
 const isEnded = computed(() => chatbox.value && chatbox.value[0] && chatbox.value[0].isEnding)
@@ -43,6 +43,43 @@ const scrollToBottom = () => {
   const ele = document.getElementById('end')
   ele?.scrollIntoView()
 }
+
+let countdown: number | null = null;
+let countdownTime = 600; 
+
+watchEffect(() => {
+  if (chatbox.value && chatbox.value[0] && messages.value && messages.value.length > 0 && !chatbox.value[0].isEnding) {
+    if (countdown) {
+      clearInterval(countdown);
+    }
+
+    countdown = setInterval(() => {
+      console.log(countdownTime + ' seconds remaining');
+      countdownTime--;
+
+      if (countdownTime <= 0) {
+        console.log(2);
+        endSession(chatbox.value[0]?.id);
+        clearInterval(countdown);
+      }
+    }, 1000);
+  }
+});
+
+watch(
+  () => chatbox.value,
+  (newChatbox) => {
+    if (newChatbox && newChatbox[0]) {
+      const lastMessage = messages.value[messages.value.length - 1]
+      const lastMessageTime = lastMessage.createdAt.toDate()
+      const now = new Date()
+      const diff = now.getTime() - lastMessageTime.getTime()
+      if (diff > 600000 && !newChatbox[0]?.isEnding) {
+        endSession(newChatbox[0]?.id)
+      }
+    }
+  }
+)
 
 watch(
   () => messages.value,
