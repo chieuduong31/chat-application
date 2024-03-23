@@ -53,5 +53,16 @@ export async function useBox(readerId: string) {
     })
   }
 
-  return { chatbox, unsubscribe, isTyping, continueChatting }
+  const endSession = async (id) => {
+    const query = chatboxesCollection.where('id', '==', id)
+    const querySnapshot = await query.get();
+    querySnapshot.forEach((doc) => {
+      doc.ref.update({
+        isEnding: true,
+        lastEnd: new Date()
+      })
+    })
+  }
+
+  return { chatbox, unsubscribe, isTyping, continueChatting, endSession }
 }
