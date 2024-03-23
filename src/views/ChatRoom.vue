@@ -54,7 +54,7 @@ watchEffect(() => {
     }
 
     countdownTime = 600
-    
+
     countdown = setInterval(() => {
       console.log(countdownTime + ' seconds remaining');
       countdownTime--;
@@ -73,9 +73,9 @@ watch(
   (newChatbox) => {
     if (newChatbox && newChatbox[0]) {
       const lastMessage = messages.value[messages.value.length - 1]
-      const lastMessageTime = lastMessage.createdAt.toDate()
+      const lastMessageTime = lastMessage?.createdAt.toDate()
       const now = new Date()
-      const diff = now.getTime() - lastMessageTime.getTime()
+      const diff = now.getTime() - lastMessageTime?.getTime()
       if (diff > 600000 && !newChatbox[0]?.isEnding) {
         endSession(newChatbox[0]?.id)
       }
