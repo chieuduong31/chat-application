@@ -1,19 +1,36 @@
 <template>
-  <div class="chat-container" :class="{
-    'is-ended': isEnded
-  }">
+  <div
+    class="chat-container"
+    :class="{
+      'is-ended': isEnded
+    }"
+  >
     <div class="end-notify" v-if="isEnded">
       <p>トークを終了しました</p>
       <div class="back-btn" @click="backToList">戻る</div>
     </div>
     <template v-else>
-      <TheMessage v-for="(message, index) in messages" :key="index" :isOwn="message.from === authStore.user?.uid"
-        :message="message" />
+      <TheMessage
+        v-for="(message, index) in messages"
+        :key="index"
+        :isOwn="message.from === authStore.user?.uid"
+        :message="message"
+      />
     </template>
-    <span class="text-sm" v-if="chatbox && chatbox[0]?.readerIsTyping">占い師が入力しています。。。</span>
+    <span class="text-sm" v-if="chatbox && chatbox[0]?.readerIsTyping"
+      >占い師が入力しています。。。</span
+    >
     <div id="end" class="end"></div>
-    <SendMessage v-if="!isEnded" :isEnd="isEnded" @sent="scrollToBottom" :send="sendMessage" :sendUnread="sendUnread"
-      :isTyping="isTyping" :chatboxId="chatbox?.[0]?.id" :readerId="readerId" />
+    <SendMessage
+      v-if="!isEnded"
+      :isEnd="isEnded"
+      @sent="scrollToBottom"
+      :send="sendMessage"
+      :sendUnread="sendUnread"
+      :isTyping="isTyping"
+      :chatboxId="chatbox?.[0]?.id"
+      :readerId="readerId"
+    />
   </div>
 </template>
 
@@ -53,8 +70,8 @@ watchEffect(() => {
       clearInterval(countdown);
     }
 
+
     countdownTime = 600
-    
     countdown = setInterval(() => {
       console.log(countdownTime + ' seconds remaining');
       countdownTime--;
@@ -120,7 +137,7 @@ onUnmounted(() => {
   padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px;
 
   height: calc(100vh - 2 * 72px);
   overflow: scroll;

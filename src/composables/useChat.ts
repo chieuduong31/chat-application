@@ -21,7 +21,7 @@ export async function useChat(readerId: string) {
     messagesCollection.add({
       from: user.uid,
       to: readerId,
-      msg: msg,
+      msg: msg.trim(),
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     })
   }
