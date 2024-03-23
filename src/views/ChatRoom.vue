@@ -70,6 +70,8 @@ watchEffect(() => {
       clearInterval(countdown);
     }
 
+
+    countdownTime = 600
     countdown = setInterval(() => {
       console.log(countdownTime + ' seconds remaining');
       countdownTime--;
@@ -121,6 +123,12 @@ onMounted(() => {
 onUnmounted(() => {
   unsubscribe()
   _unsubscribe()
+})
+
+onUnmounted(() => {
+  if (countdown) {
+    clearInterval(countdown);
+  }
 })
 </script>
 
