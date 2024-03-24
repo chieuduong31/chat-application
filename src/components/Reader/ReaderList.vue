@@ -15,6 +15,7 @@ import ReaderItem from './ReaderItem.vue'
 import { useRouter } from 'vue-router'
 import { defineProps, watch } from 'vue'
 import { useBox } from '@/composables/useBox'
+import { unsubscribe } from 'diagnostics_channel'
 
 const router = useRouter()
 
@@ -25,10 +26,13 @@ interface Props {
 defineProps<Props>()
 
 const getDetail = async (reader) => {
-  const { chatbox, unsubscribe: _unsubscribe, continueChatting } = await useBox(reader.id)
-  const stopWatch = watch(chatbox, (newValue) => {
+  const { chatbox,unsubscribe, continueChatting } = await useBox(reader.id)
+  let count = 0
+  watch(chatbox, (newValue) => {
+    if (count > 0) {
+      return
+    }
     if (newValue && newValue.length > 0 && newValue[0].isEnding) {
-      stopWatch();
       continueChatting()
       router.push({
         name: 'Chat',
@@ -36,6 +40,7 @@ const getDetail = async (reader) => {
           chat_id: reader.id
         }
       })
+      count++
     } else {
       router.push({
         name: 'Chat',
@@ -43,8 +48,10 @@ const getDetail = async (reader) => {
           chat_id: reader.id
         }
       })
+    count++
     }
   });
+  unsubscribe
 }
 </script>
 
