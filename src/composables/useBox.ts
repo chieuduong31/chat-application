@@ -49,9 +49,33 @@ export async function useBox(readerId: string) {
     const docRef = doc(chatboxesCollection, chatbox.value[0].docId)
     updateDoc(docRef, {
       isEnding: false,
-      lastEnd: null
+      lastEnd: null,
+      lastMessage: null
     })
   }
 
-  return { chatbox, unsubscribe, isTyping, continueChatting }
+  const endSession = async (id) => {
+    const query = chatboxesCollection.where('id', '==', id)
+    const querySnapshot = await query.get();
+    querySnapshot.forEach((doc) => {
+      doc.ref.update({
+        isEnding: true,
+        lastEnd: new Date(),
+      })
+    })
+  }
+
+  const lastMessage = async () => {
+    if (!authStore.isLogin) return
+    if (!chatbox.value ) return
+    const query = chatboxesCollection.where('id', '==', chatbox.value[0]?.id)
+    const querySnapshot = await query.get();
+    querySnapshot.forEach((doc) => {
+      doc.ref.update({
+        lastMessage: new Date()
+      })
+    })
+  }
+
+  return { chatbox, unsubscribe, isTyping, continueChatting, endSession, lastMessage }
 }
