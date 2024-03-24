@@ -64,20 +64,18 @@ const scrollToBottom = () => {
 let countdown: number | null = null;
 let countdownTime = 600;
 
-watchEffect(() => {
+const stopWatchEffect = watchEffect(() => {
   if (chatbox.value && chatbox.value[0] && messages.value && messages.value.length > 0 && !chatbox.value[0].lastMessage) {
     if (countdown) {
       clearInterval(countdown);
     }
 
-    countdownTime = 600
+    countdownTime = 600;
 
     countdown = setInterval(() => {
-      console.log(countdownTime + ' seconds remaining');
       countdownTime--;
 
       if (countdownTime <= 0) {
-        console.log(2);
         endSession(chatbox.value[0]?.id);
         clearInterval(countdown);
       }
@@ -93,7 +91,6 @@ watch(
       const now = new Date()
       const diff = now.getTime() - lastMessage?.getTime()
       if (diff > 600000 && !newChatbox[0]?.isEnding) {
-        console.log(diff)
         endSession(newChatbox[0]?.id)
       }
     }
@@ -128,7 +125,12 @@ onMounted(() => {
 onUnmounted(() => {
   unsubscribe()
   _unsubscribe()
+  if (countdown) {
+    clearInterval(countdown);
+  }
+  stopWatchEffect();
 })
+
 </script>
 
 <style scoped>
