@@ -65,7 +65,7 @@ let countdown: number | null = null;
 let countdownTime = 600;
 
 const stopWatchEffect = watchEffect(() => {
-  if (chatbox.value && chatbox.value[0] && messages.value && messages.value.length > 0 && !chatbox.value[0].lastMessage) {
+  if (chatbox.value && chatbox.value[0] && messages.value && messages.value.length > 0) {
     if (countdown) {
       clearInterval(countdown);
     }
@@ -74,7 +74,6 @@ const stopWatchEffect = watchEffect(() => {
 
     countdown = setInterval(() => {
       countdownTime--;
-
       if (countdownTime <= 0) {
         endSession(chatbox.value[0]?.id);
         clearInterval(countdown);
