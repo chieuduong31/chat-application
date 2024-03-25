@@ -62,7 +62,7 @@ const scrollToBottom = () => {
 }
 
 let countdown: number | null = null;
-let countdownTime = 60;
+let countdownTime = 600;
 
 const stopWatchEffect = watchEffect(() => {
   if (chatbox.value && chatbox.value[0] && messages.value && messages.value.length > 0) {
@@ -70,7 +70,7 @@ const stopWatchEffect = watchEffect(() => {
       clearInterval(countdown);
     }
 
-    countdownTime = 60;
+    countdownTime = 600;
 
     if (chatbox.value[0].isEnding) {
       return;
