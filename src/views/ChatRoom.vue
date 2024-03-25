@@ -86,17 +86,18 @@ const stopWatchEffect = watchEffect(() => {
   }
 });
 
+let runOnce = true;
 watch(
   () => chatbox.value,
   (newChatbox) => {
-    if (newChatbox && newChatbox[0] && newChatbox[0].lastMessage) {
+    if (newChatbox && newChatbox[0] && !newChatbox[0].isEnding && newChatbox[0].lastMessage && runOnce) {
       const lastMessage = newChatbox[0]?.lastMessage.toDate()
       const now = new Date()
       const diff = now.getTime() - lastMessage?.getTime()
-      console.log('ended')
       if (diff > 600000 && !newChatbox[0]?.isEnding) {
         endSession(newChatbox[0]?.id)
       }
+      runOnce = false
     }
   }
 )
