@@ -64,25 +64,33 @@ const scrollToBottom = () => {
 let countdown: number | null = null;
 let countdownTime = 600;
 
+let prevLastMessage = null;
+
 const stopWatchEffect = watchEffect(() => {
   if (chatbox.value && chatbox.value[0] && messages.value && messages.value.length > 0) {
-    if (countdown) {
-      clearInterval(countdown);
-    }
+    const newVal = chatbox.value[0].lastMessage; // assuming this is the time of the last message
 
-    countdownTime = 600;
-
-    if (chatbox.value[0].isEnding) {
-      return;
-    }
-    countdown = setInterval(() => {
-      countdownTime--;
-      console.log(countdownTime)
-      if (countdownTime <= 0) {
-        endSession(chatbox.value[0]?.id);
+    if (newVal?.toDate().getTime() != prevLastMessage?.toDate().getTime()) {
+      if (countdown) {
         clearInterval(countdown);
       }
-    }, 1000);
+
+      countdownTime = 600;
+
+      if (chatbox.value[0].isEnding) {
+        return;
+      }
+      countdown = setInterval(() => {
+        countdownTime--;
+        console.log(countdownTime)
+        if (countdownTime <= 0) {
+          endSession(chatbox.value[0]?.id);
+          clearInterval(countdown);
+        }
+      }, 1000);
+    }
+
+    prevLastMessage = newVal;
   }
 });
 
