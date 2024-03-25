@@ -62,7 +62,7 @@ const scrollToBottom = () => {
 }
 
 let countdown: number | null = null;
-let countdownTime = 600;
+let countdownTime = 60;
 
 const stopWatchEffect = watchEffect(() => {
   if (chatbox.value && chatbox.value[0] && messages.value && messages.value.length > 0) {
@@ -70,10 +70,14 @@ const stopWatchEffect = watchEffect(() => {
       clearInterval(countdown);
     }
 
-    countdownTime = 600;
+    countdownTime = 60;
 
+    if (chatbox.value[0].isEnding) {
+      return;
+    }
     countdown = setInterval(() => {
       countdownTime--;
+      console.log(countdownTime)
       if (countdownTime <= 0) {
         endSession(chatbox.value[0]?.id);
         clearInterval(countdown);
@@ -89,6 +93,7 @@ watch(
       const lastMessage = newChatbox[0]?.lastMessage.toDate()
       const now = new Date()
       const diff = now.getTime() - lastMessage?.getTime()
+      console.log('ended')
       if (diff > 600000 && !newChatbox[0]?.isEnding) {
         endSession(newChatbox[0]?.id)
       }
