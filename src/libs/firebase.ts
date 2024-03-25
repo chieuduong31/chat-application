@@ -3,13 +3,15 @@ import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAlWaCDcPGmPQ7cx2b4jY059glmkVQNcSM',
-  authDomain: 'chat-application-56c11.firebaseapp.com',
-  projectId: 'chat-application-56c11',
-  storageBucket: 'chat-application-56c11.appspot.com',
-  messagingSenderId: '1065471895110',
-  appId: '1:1065471895110:web:d49cbf8d21e5e3a9014c47'
-}
+  apiKey: "AIzaSyDufM1cAckuYLfgn81lTCmg2wVUiSDyM3U",
+  authDomain: "chatbox-b9fba-6267d.firebaseapp.com",
+  databaseURL: "https://chatbox-b9fba-default-rtdb.firebaseio.com",
+  projectId: "chatbox-b9fba",
+  storageBucket: "chatbox-b9fba.appspot.com",
+  messagingSenderId: "831904839153",
+  appId: "1:831904839153:web:c9a8f642557d71fdc80050",
+  measurementId: "G-2CT93SLJ5C"
+};
 
 export const firebaseApp = firebase.initializeApp(firebaseConfig)
 export const auth = firebase.auth()
